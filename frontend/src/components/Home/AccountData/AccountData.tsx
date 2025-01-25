@@ -1,5 +1,5 @@
 import React from "react";
-import Buttons from "../Buttons/Buttons";
+import EditORdeleteBtns from "../EditORdeleteBtns/EditORdeleteBtns";
 
 const AccountData = () => {
   return (
@@ -9,7 +9,7 @@ const AccountData = () => {
       <td className="T-body-border">090-1234-5678</td>
       <td className="T-body-border">sakamoto@example.com</td>
       <td className="T-body-border ">
-        <Buttons />
+        <EditORdeleteBtns />
       </td>
     </tr>
   );

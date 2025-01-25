@@ -18,9 +18,15 @@ const ButtonCustomSize = ({
   return (
     <button
       type={type}
-      style={{ width: width }}
+      style={{
+        width: width,
+        backgroundColor: bgColor,
+        borderColor: textColor,
+        color: textColor,
+      }}
       onClick={handleClick}
-      className={`p-1 bg-${bgColor} border border-${textColor} text-${textColor} text-sm rounded-sm  hover:opacity-80 hover:scale-[1.04] transition-all duration-200`}
+      className={`p-1  border   text-sm rounded-sm  hover:opacity-80 hover:scale-[1.04] transition-all duration-200`}
+      // className={`p-1 bg-${bgColor} border border-${textColor} text-${textColor} text-sm rounded-sm  hover:opacity-80 hover:scale-[1.04] transition-all duration-200`}
     >
       {text}
     </button>
