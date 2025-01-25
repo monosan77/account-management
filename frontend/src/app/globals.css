@@ -13,9 +13,31 @@
     --foreground: #ededed;
   }
 }
-
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+}
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: #000;
+  background: #fff;
   font-family: Arial, Helvetica, sans-serif;
+}
+.T-head-border {
+  padding: 4px;
+  color: #00B3FF;
+  border: solid 1px black;
+}
+.T-body-border {
+  
+  padding: 4px;
+  /* font-weight: bold; */
+  font-size: 0.85rem;
+  border: solid 1px black;
+}
+.btn-style {
+  padding: 2px 7px;
+  margin: 0 3px;
+  border: solid 1px black;
 }
