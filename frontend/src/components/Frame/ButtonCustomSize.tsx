@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 type Prop = {
   text: string;
-  type: "button" | "submit";
+  type: 'button' | 'submit';
   width: string;
   bgColor: string;
   textColor: string;
