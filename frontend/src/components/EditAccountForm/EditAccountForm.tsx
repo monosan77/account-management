@@ -1,11 +1,11 @@
-"use client";
-import { Inputs } from "@/types";
-import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import UserName from "../AccountForm/UserName";
-import Email from "../AccountForm/Email";
-import TelNumber from "../AccountForm/TelNumber";
-import Buttons from "../AccountForm/AccountFormBtns";
+'use client';
+import { Inputs } from '@/types';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import UserName from '../AccountForm/UserName';
+import Email from '../AccountForm/Email';
+import TelNumber from '../AccountForm/TelNumber';
+import Buttons from '../AccountForm/AccountFormBtns';
 
 type Prop = {
   formData: FormData;

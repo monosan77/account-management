@@ -1,13 +1,11 @@
-"use client";
-import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import UserName from "../AccountForm/UserName";
-import Email from "../AccountForm/Email";
-import TelNumber from "../AccountForm/TelNumber";
-import Buttons from "../AccountForm/AccountFormBtns";
-import { Inputs } from "@/types";
-
-
+'use client';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import UserName from '../AccountForm/UserName';
+import Email from '../AccountForm/Email';
+import TelNumber from '../AccountForm/TelNumber';
+import Buttons from '../AccountForm/AccountFormBtns';
+import { Inputs } from '@/types';
 
 const AddAccountForm = () => {
   const {
@@ -16,8 +14,8 @@ const AddAccountForm = () => {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      userName: "",
-      email: "",
+      userName: '',
+      email: '',
       tellNum: null,
     },
   });

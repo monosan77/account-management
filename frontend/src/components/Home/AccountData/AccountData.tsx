@@ -1,5 +1,5 @@
-import React from "react";
-import EditORdeleteBtns from "../EditORdeleteBtns/EditORdeleteBtns";
+import React from 'react';
+import EditORdeleteBtns from '../EditORdeleteBtns/EditORdeleteBtns';
 
 const AccountData = () => {
   return (
