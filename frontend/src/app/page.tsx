@@ -1,16 +1,16 @@
-import Frame from "@/components/Frame/Frame";
-import AccountData from "@/components/Home/AccountData/AccountData";
-import DataTitle from "@/components/Home/DataTitle/DataTitle";
+import Frame from '@/components/Frame/Frame';
+import AccountData from '@/components/Home/AccountData/AccountData';
+import DataTitle from '@/components/Home/DataTitle/DataTitle';
 
 export default function Home() {
   return (
-    <Frame title={"アカウント一覧"} width="800px" isAddAccount={true}>
+    <Frame title={'アカウント一覧'} width="800px" isAddAccount={true}>
       <table className=" text-center ">
         <thead className="mb-2">
-          <DataTitle/>
+          <DataTitle />
         </thead>
         <tbody>
-          <AccountData/>
+          <AccountData />
         </tbody>
       </table>
     </Frame>

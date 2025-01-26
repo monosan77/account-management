@@ -1,7 +1,7 @@
-"use client";
-import ConfirmModal from "@/components/Modal/ConfirmModal/ConfirmModal";
-import Link from "next/link";
-import { useState } from "react";
+'use client';
+import ConfirmModal from '@/components/Modal/ConfirmModal/ConfirmModal';
+import Link from 'next/link';
+import { useState } from 'react';
 
 const EditORdeleteBtns = () => {
   // Reduxを使うので後で修正
@@ -11,7 +11,7 @@ const EditORdeleteBtns = () => {
   }
   return (
     <>
-      <Link href={"/edit"} className="btn-style bg-[#C6E0EC] hover:opacity-85">
+      <Link href={'/edit'} className="btn-style bg-[#C6E0EC] hover:opacity-85">
         編集
       </Link>
       <button

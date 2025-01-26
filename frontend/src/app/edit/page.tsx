@@ -1,12 +1,12 @@
-import EditAccountForm from "@/components/EditAccountForm/EditAccountForm";
-import Frame from "@/components/Frame/Frame";
-import React from "react";
+import EditAccountForm from '@/components/EditAccountForm/EditAccountForm';
+import Frame from '@/components/Frame/Frame';
+import React from 'react';
 
 // API作成したときに削除する。
 const mockData = {
-  userName: "山田太郎",
-  email: "yamada@example.com",
-  TellNum: "09012345678",
+  userName: '山田太郎',
+  email: 'yamada@example.com',
+  TellNum: '09012345678',
 };
 
 const EditPage = () => {

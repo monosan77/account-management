@@ -1,4 +1,4 @@
-import ConfirmButtons from "./ConfirmButtons";
+import ConfirmButtons from './ConfirmButtons';
 
 interface Prop {
   handleCloseModal: () => void;
@@ -9,7 +9,7 @@ const ConfirmModal = ({ handleCloseModal }: Prop) => {
       <div className="w-[600px] border-2 border-red-600 bg-[#FFF8F8] p-7 rounded-md">
         <div>
           <p>
-            <span className="font-bold">坂本龍馬</span>{" "}
+            <span className="font-bold">坂本龍馬</span>{' '}
             さんのアカウントを削除します。
           </p>
           <p>削除したらもとに戻せません。</p>

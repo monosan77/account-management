@@ -1,5 +1,5 @@
-import ButtonCustomSize from "../Frame/ButtonCustomSize";
-import { useRouter } from "next/navigation";
+import ButtonCustomSize from '../Frame/ButtonCustomSize';
+import { useRouter } from 'next/navigation';
 
 const AccountFormBtns = () => {
   const router = useRouter();
@@ -9,15 +9,15 @@ const AccountFormBtns = () => {
         text="保存する"
         type="submit"
         width="100px"
-        bgColor={"#00B3FF"}
-        textColor={"#ffffff"}
+        bgColor={'#00B3FF'}
+        textColor={'#ffffff'}
       />
       <ButtonCustomSize
         text="キャンセル"
         type="button"
         width="100px"
-        bgColor={"white"}
-        textColor={"#00B3FF"}
+        bgColor={'white'}
+        textColor={'#00B3FF'}
         handleClick={() => router.back()}
       />
     </div>
