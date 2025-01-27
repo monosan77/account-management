@@ -11,6 +11,7 @@ export default function Home() {
         </thead>
         <tbody>
           <AccountData />
+          <AccountData />
         </tbody>
       </table>
     </Frame>
