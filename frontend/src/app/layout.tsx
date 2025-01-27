@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DotGothic16 } from 'next/font/google';
 import './globals.css';
+import StoreProvider from './StoreProvider';
 
 const DotGothic = DotGothic16({
   weight: '400',
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${DotGothic.className} `}>{children}</body>
+      <body className={`${DotGothic.className} `}>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   );
 }
