@@ -14,7 +14,7 @@ export default async function Home() {
 
 export async function getAccountAllData() {
   try {
-    const res = await fetch('http://localhost:3001/account', {
+    const res = await fetch('http://localhost:3001/account/allAccount', {
       next: { revalidate: 10 },
     });
     if (!res.ok) {

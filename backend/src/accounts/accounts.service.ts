@@ -16,6 +16,19 @@ export class AccountsService {
     private accountRepository: Repository<Account>,
   ) {}
 
+  //特定のアカウントを取得する
+  async findOneAccount(id: string): Promise<AccountModel> {
+    const accountData = await this.accountRepository.findOne({
+      where: { id: id },
+    });
+    if (!accountData) {
+      throw new NotFoundException(
+        '指定のアカウントデータが見つかりませんでした。',
+      );
+    }
+    return accountData;
+  }
+
   //アカウント情報を全て取得する
   async findAll() {
     const accountData: AccountModel[] = await this.accountRepository.find();

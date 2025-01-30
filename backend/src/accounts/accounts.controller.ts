@@ -22,11 +22,23 @@ export type AccountModel = {
 @Controller('account')
 export class AccountsController {
   constructor(private readonly AccountsService: AccountsService) {}
-  @Get()
+
+  // 特定のアカウントを取得
+  @Get('oneAccount')
+  async findOneAccount(@Query('id') id: string): Promise<AccountModel> {
+    if (!id) {
+      throw new BadRequestException('リクストエラー：IDが指定されていません');
+    }
+    return this.AccountsService.findOneAccount(id);
+  }
+
+  // 全てのアカウントを取得
+  @Get('allAccount')
   async findAll(): Promise<AccountModel[]> {
     return await this.AccountsService.findAll();
   }
 
+  // アカウントを削除
   @Delete()
   @HttpCode(204)
   deleteAccount(@Query('id') id: string) {
@@ -38,6 +50,7 @@ export class AccountsController {
     return this.AccountsService.deleteAccount(id);
   }
 
+  // アカウントを追加
   @Post()
   @HttpCode(201)
   async createAccount(
@@ -46,6 +59,7 @@ export class AccountsController {
     return await this.AccountsService.createAccount(createAccount);
   }
 
+  // アカウントを編集
   @Put()
   async updataAccount(@Body() updataAccount: UpdataAccountDto) {
     return await this.AccountsService.updataAccount(updataAccount);
