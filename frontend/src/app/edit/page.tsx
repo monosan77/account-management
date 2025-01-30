@@ -4,25 +4,6 @@ import NoGetData from '@/components/NoGetData/NoGetData';
 import { AccountDataModel } from '@/types';
 import React from 'react';
 
-async function getOneAccount(accountId: string) {
-  try {
-    const res = await fetch(
-      `http://localhost:3001/account/oneAccount?id=${accountId}`,
-      {
-        next: { revalidate: 10 },
-      }
-    );
-    if (!res.ok) {
-      throw new Error('データを取得できませんでした。');
-    }
-    const accountAllData = await res.json();
-    return accountAllData;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
 const EditPage = async ({
   searchParams,
 }: {
@@ -42,3 +23,22 @@ const EditPage = async ({
 };
 
 export default EditPage;
+
+async function getOneAccount(accountId: string) {
+  try {
+    const res = await fetch(
+      `http://localhost:3001/account/oneAccount?id=${accountId}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error('データを取得できませんでした。');
+    }
+    const accountAllData = await res.json();
+    return accountAllData;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

@@ -73,6 +73,7 @@ export async function actionsUpdataAccount(
       throw new Error('サーバーエラーが発生しました。');
     }
     revalidatePath('/');
+    revalidatePath('/edit');
     return { status: 409 };
   } catch (error) {
     console.log(error);

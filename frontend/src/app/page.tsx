@@ -12,10 +12,10 @@ export default async function Home() {
   );
 }
 
-export async function getAccountAllData() {
+async function getAccountAllData() {
   try {
     const res = await fetch('http://localhost:3001/account/allAccount', {
-      next: { revalidate: 10 },
+      next: { revalidate: 3600 },
     });
     if (!res.ok) {
       throw new Error('データを取得できませんでした。');
