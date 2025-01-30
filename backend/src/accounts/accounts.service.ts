@@ -16,6 +16,19 @@ export class AccountsService {
     private accountRepository: Repository<Account>,
   ) {}
 
+  //特定のアカウントを取得する
+  async findOneAccount(id: string): Promise<AccountModel> {
+    const accountData = await this.accountRepository.findOne({
+      where: { id: id },
+    });
+    if (!accountData) {
+      throw new NotFoundException(
+        '指定のアカウントデータが見つかりませんでした。',
+      );
+    }
+    return accountData;
+  }
+
   //アカウント情報を全て取得する
   async findAll() {
     const accountData: AccountModel[] = await this.accountRepository.find();
@@ -40,19 +53,27 @@ export class AccountsService {
     const findAccount = await this.accountRepository.find({
       where: { email: account.email },
     });
-    if (findAccount) {
+    if (findAccount.length > 0) {
       throw new ConflictException('既に存在するメールアドレスです');
     }
     const newAccount: AccountModel = await this.accountRepository.save(account);
     return newAccount;
   }
 
+  // アカウントの更新
   async updataAccount(updataAccount: UpdataAccountDto) {
     const account = new Account();
     account.id = updataAccount.id;
     account.name = updataAccount.name;
     account.email = updataAccount.email;
     account.tel = updataAccount.tel;
+
+    const findAccount = await this.accountRepository.findOne({
+      where: { email: account.email },
+    });
+    if (findAccount && account.id !== findAccount?.id) {
+      throw new ConflictException('既に存在するメールアドレスです');
+    }
 
     const updataData = await this.accountRepository.save(account);
     return updataData;

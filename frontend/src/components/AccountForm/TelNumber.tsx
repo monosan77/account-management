@@ -16,7 +16,7 @@ const TelNumber = ({ register, errors }: Prop) => {
         type="tel"
         id="tellNum"
         className="w-[calc(100%-48px)] px-1 text-sm mx-4  block border border-gray-600"
-        {...register('tellNum', {
+        {...register('tel', {
           required: '必須入力です',
           pattern: {
             value: /^0[5789]0\d{8}$/, // ハイフンなし10〜11桁の携帯番号

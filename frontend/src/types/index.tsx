@@ -2,5 +2,13 @@
 export type Inputs = {
   userName: string;
   email: string;
-  tellNum: string | null;
+  tel: string;
+};
+
+// APIから返却されるアカウントのデータ型
+export type AccountDataModel = {
+  id: string;
+  name: string;
+  email: string;
+  tel: string;
 };
