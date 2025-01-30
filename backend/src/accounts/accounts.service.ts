@@ -40,13 +40,14 @@ export class AccountsService {
     const findAccount = await this.accountRepository.find({
       where: { email: account.email },
     });
-    if (findAccount) {
+    if (findAccount.length > 0) {
       throw new ConflictException('既に存在するメールアドレスです');
     }
     const newAccount: AccountModel = await this.accountRepository.save(account);
     return newAccount;
   }
 
+  // アカウントの更新
   async updataAccount(updataAccount: UpdataAccountDto) {
     const account = new Account();
     account.id = updataAccount.id;
