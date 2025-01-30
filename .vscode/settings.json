@@ -7,6 +7,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode" // TypeScript も Prettier を使用
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true // ESLint による問題解決を実行
+    "source.fixAll.eslint": "explicit"
   }
 }

@@ -1,36 +1,31 @@
 'use client';
-import ConfirmModal from '@/components/Modal/ConfirmModal/ConfirmModal';
 import { setIsOpen } from '@/lib/redux/modalOpen';
-import { RootState } from '@/lib/redux/store';
 import Link from 'next/link';
 // import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-const EditORdeleteBtns = () => {
-  // Reduxを使うので後で修正
-  // const [isOpenModal, setIsOpenModal] = useState(false);
-  const isOpenModal = useSelector((state: RootState) => state.modalOpen.value);
+type Prop = {
+  accountId: string;
+  accountName: string;
+};
+
+const EditORdeleteBtns = ({ accountId, accountName }: Prop) => {
   const dispatch = useDispatch();
-  // function handleCloseModal() {
-  //   // setIsOpenModal(!isOpenModal);
-  // }
   return (
     <>
-      <Link href={'/edit'} className="btn-style bg-[#C6E0EC] hover:opacity-85">
+      <Link
+        href={`/edit?id=${accountId}`}
+        className="btn-style bg-[#C6E0EC] hover:opacity-85"
+      >
         編集
       </Link>
       <button
         type="button"
-        onClick={() => dispatch(setIsOpen())}
-        // onClick={handleCloseModal}
+        onClick={() => dispatch(setIsOpen({ accountName, accountId }))}
         className="btn-style bg-[#ED828D] hover:opacity-85"
       >
         削除
       </button>
-      {isOpenModal && (
-        <ConfirmModal handleCloseModal={() => dispatch(setIsOpen())} />
-      )}
-      {/* {isOpenModal && <ConfirmModal handleCloseModal={handleCloseModal} />} */}
     </>
   );
 };
