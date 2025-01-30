@@ -1,18 +1,42 @@
 import EditAccountForm from '@/components/EditAccountForm/EditAccountForm';
 import Frame from '@/components/Frame/Frame';
+import NoGetData from '@/components/NoGetData/NoGetData';
+import { AccountDataModel } from '@/types';
 import React from 'react';
 
-// API作成したときに削除する。
-const mockData = {
-  userName: '山田太郎',
-  email: 'yamada@example.com',
-  TellNum: '09012345678',
-};
+async function getOneAccount(accountId: string) {
+  try {
+    const res = await fetch(
+      `http://localhost:3001/account/oneAccount?id=${accountId}`,
+      {
+        next: { revalidate: 10 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error('データを取得できませんでした。');
+    }
+    const accountAllData = await res.json();
+    return accountAllData;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
-const EditPage = () => {
+const EditPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ id: string }>;
+}) => {
+  const accountId = (await searchParams).id;
+  const accountData: AccountDataModel | null = await getOneAccount(accountId);
   return (
     <Frame title="アカウント追加" width="500px">
-      <EditAccountForm formData={mockData} />
+      {accountData ? (
+        <EditAccountForm accountData={accountData} />
+      ) : (
+        <NoGetData />
+      )}
     </Frame>
   );
 };

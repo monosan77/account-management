@@ -68,6 +68,13 @@ export class AccountsService {
     account.email = updataAccount.email;
     account.tel = updataAccount.tel;
 
+    const findAccount = await this.accountRepository.findOne({
+      where: { email: account.email },
+    });
+    if (findAccount && account.id !== findAccount?.id) {
+      throw new ConflictException('既に存在するメールアドレスです');
+    }
+
     const updataData = await this.accountRepository.save(account);
     return updataData;
   }

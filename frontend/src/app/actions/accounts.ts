@@ -35,6 +35,7 @@ export async function actionsCreateAccount(
         tel: tel,
       }),
     });
+    // 同じメールアドレス存在する場合
     if (res.status === 409) {
       return { status: 409 };
     }
@@ -43,6 +44,36 @@ export async function actionsCreateAccount(
     }
     revalidatePath('/');
     return { status: 201 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+}
+
+// アカウントの編集APIへのリクエスト
+export async function actionsUpdataAccount(
+  id: string,
+  name: string,
+  email: string,
+  tel: string
+) {
+  try {
+    const res = await fetch('http://localhost:3001/account', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name, email, tel }),
+    });
+    // 同じメールアドレス存在する場合
+    if (res.status === 409) {
+      return { status: 409 };
+    }
+    if (!res.ok) {
+      throw new Error('サーバーエラーが発生しました。');
+    }
+    revalidatePath('/');
+    return { status: 409 };
   } catch (error) {
     console.log(error);
     return { status: 500 };

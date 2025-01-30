@@ -49,7 +49,7 @@ const AddAccountForm = () => {
       <UserName register={register} errors={errors.userName?.message} />
       <Email register={register} errors={errors.email?.message} />
       <TelNumber register={register} errors={errors.tel?.message} />
-      <p className="h-6 text-center text-red-600">{apiError}</p>
+      <p className="h-6 text-center text-red-600 text-xs">{apiError}</p>
       <Buttons />
     </form>
   );
