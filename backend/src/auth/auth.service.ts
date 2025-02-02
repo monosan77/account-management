@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthSignupDto } from './dto/auth.dto';
@@ -49,7 +48,7 @@ export class AuthService {
   async authSignin(email: string, password: string, res: Response) {
     const findUser = await this.findUserInfo(email);
     if (!findUser) {
-      throw new NotFoundException('メールアドレスが違います。');
+      throw new UnauthorizedException('メールアドレスが違います。');
     }
 
     const isMatch = await bcrypt.compare(password, findUser.password);
