@@ -6,13 +6,13 @@ import {
 import { NextFunction, Request, Response } from 'express';
 import * as cookie from 'cookie';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthSession, AuthUser } from 'src/entities/user.entity';
+import { AuthSession } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { AuthService } from './auth.service';
 
 declare module 'express' {
   interface Request {
-    user: AuthUser;
+    user: { userId: string; name: string; email: string };
   }
 }
 @Injectable()
@@ -54,7 +54,12 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     // reqにユーザー情報をセット
-    req.user = sessionData.user;
+    req.user = {
+      userId: sessionData.user.id,
+      name: sessionData.user.name,
+      email: sessionData.user.email,
+    };
+
     next();
   }
 }
