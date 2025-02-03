@@ -1,52 +1,29 @@
 'use server';
 
-import { SigninModel } from '@/components/Auth/Signin/SigninForm';
-import { SignupModel } from '@/components/Auth/Signup/SignupForm';
+import { cookies } from 'next/headers';
 
-// サインアップAPIへのリクエスト
-export async function actionsAuthSignup(data: SignupModel) {
+// auth ログイン状態の確認
+export async function checkLogin() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .map(({ name, value }) => `${name}=${value}`)
+    .join('; ');
   try {
-    const sendData = {
-      name: data.userName,
-      email: data.email,
-      password: data.password,
-    };
-    const res = await fetch('http://localhost:3001/auth/signup', {
-      method: 'POST',
+    const res = await fetch('http://localhost:3001/auth', {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        Cookie: cookieHeader,
       },
-      body: JSON.stringify(sendData),
+      credentials: 'include',
     });
-    if (res.status === 409) {
-      return { statsCode: 409 };
-    } else if (!res.ok) {
-      return { statsCode: 500 };
+
+    if (!res.ok) {
+      return null;
+    } else if (res.ok) {
+      return await res.json();
     }
-    return { statsCode: 200 };
   } catch (error) {
     console.log(error);
-    return { statsCode: 500 };
-  }
-}
-
-export async function actionsAuthSignin(data: SigninModel) {
-  try {
-    const res = await fetch('http://localhost:3001/auth/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (res.status === 401) {
-      return { statsCode: 401 };
-    } else if (!res.ok) {
-      return { statsCode: 500 };
-    }
-    return { statsCode: 200 };
-  } catch (error) {
-    console.log(error);
-    return { statsCode: 500 };
   }
 }
