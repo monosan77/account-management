@@ -17,6 +17,7 @@ const EditPage = async ({
   if (!user) {
     return redirect('/session-error');
   }
+
   const accountId = (await searchParams).id;
   const accountData: AccountDataModel | null = await getOneAccount(accountId);
   return (
