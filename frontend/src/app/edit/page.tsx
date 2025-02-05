@@ -3,16 +3,25 @@ import Frame from '@/components/Frame/Frame';
 import NoGetData from '@/components/NoGetData/NoGetData';
 import { AccountDataModel } from '@/types';
 import React from 'react';
+import { checkLogin } from '../actions/auth';
+import { redirect } from 'next/navigation';
+import { getOneAccount } from '../actions/accounts';
 
 const EditPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ id: string }>;
 }) => {
+  // 認証チェック
+  const user = await checkLogin();
+  if (!user) {
+    return redirect('/session-error');
+  }
+
   const accountId = (await searchParams).id;
   const accountData: AccountDataModel | null = await getOneAccount(accountId);
   return (
-    <Frame title="アカウント追加" width="500px">
+    <Frame title="アカウント編集" width="500px">
       {accountData ? (
         <EditAccountForm accountData={accountData} />
       ) : (
@@ -24,21 +33,21 @@ const EditPage = async ({
 
 export default EditPage;
 
-async function getOneAccount(accountId: string) {
-  try {
-    const res = await fetch(
-      `http://localhost:3001/account/oneAccount?id=${accountId}`,
-      {
-        next: { revalidate: 3600 },
-      }
-    );
-    if (!res.ok) {
-      throw new Error('データを取得できませんでした。');
-    }
-    const accountAllData = await res.json();
-    return accountAllData;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
+// async function getOneAccount(accountId: string) {
+//   try {
+//     const res = await fetch(
+//       `http://localhost:3001/account/oneAccount?id=${accountId}`,
+//       {
+//         next: { revalidate: 3600 },
+//       }
+//     );
+//     if (!res.ok) {
+//       throw new Error('データを取得できませんでした。');
+//     }
+//     const accountAllData = await res.json();
+//     return accountAllData;
+//   } catch (error) {
+//     console.log(error);
+//     return null;
+//   }
+// }

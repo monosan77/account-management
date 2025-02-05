@@ -12,12 +12,17 @@ const ConfirmButtons = () => {
 
   async function deleteAccount() {
     try {
-      const isDeleteAccount = await actionsDeleteAccount(accountId);
-      if (!isDeleteAccount) {
+      const { status } = await actionsDeleteAccount(accountId);
+      if (status === 500) {
         throw new Error('削除できませんでした。');
+      } else if (status === 401) {
+        return router.push('/session-error');
+      } else if (status === 200) {
+        dispatch(setIsClose());
+        return router.push('/');
+      } else {
+        throw new Error('予期せぬエラーが発生しました。');
       }
-      dispatch(setIsClose());
-      return router.push('/');
     } catch (error) {
       console.log(error);
     }

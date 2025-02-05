@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthSignupDto } from './dto/auth.dto';
@@ -10,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 @Injectable()
 export class AuthService {
   constructor(
@@ -21,7 +20,7 @@ export class AuthService {
     private authSessionRepository: Repository<AuthSession>,
   ) {}
   // サインアップ時の関数
-  async authSignup(authSignupData: AuthSignupDto) {
+  async authSignup(authSignupData: AuthSignupDto, res: Response) {
     const findUser = await this.findUserInfo(authSignupData.email);
     if (findUser) {
       throw new ConflictException('既に登録済みのメールアドレスです');
@@ -40,7 +39,8 @@ export class AuthService {
     const userData = await this.authUserRepository.save(auth);
 
     // セッションIDを生成する
-    await this.createSessionTable(userData);
+    const newSession = await this.createSessionTable(userData);
+    this.setCookie(res, newSession.session_id);
 
     return { message: '登録完了' };
   }
@@ -49,7 +49,7 @@ export class AuthService {
   async authSignin(email: string, password: string, res: Response) {
     const findUser = await this.findUserInfo(email);
     if (!findUser) {
-      throw new NotFoundException('メールアドレスが違います。');
+      throw new UnauthorizedException('メールアドレスが違います。');
     }
 
     const isMatch = await bcrypt.compare(password, findUser.password);
@@ -73,12 +73,7 @@ export class AuthService {
     await this.updataSessionTable(findSession);
 
     // クッキーにセッションIDをセット
-    res.cookie('session_id', findSession.session_id, {
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24,
-    });
+    this.setCookie(res, findSession.session_id);
 
     return { message: 'ログイン完了' };
   }
@@ -116,5 +111,10 @@ export class AuthService {
       maxAge: 1000 * 60 * 60 * 24,
     });
     return;
+  }
+
+  checkLogin(req: Request) {
+    const user = req.user;
+    return user;
   }
 }

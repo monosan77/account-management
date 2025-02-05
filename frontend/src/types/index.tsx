@@ -12,3 +12,10 @@ export type AccountDataModel = {
   email: string;
   tel: string;
 };
+
+// ログインユーザーのデータ型
+export type UserModel = {
+  userId: string;
+  name: string;
+  email: string;
+};
