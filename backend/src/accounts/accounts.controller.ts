@@ -41,13 +41,13 @@ export class AccountsController {
   // アカウントを削除
   @Delete()
   @HttpCode(204)
-  deleteAccount(@Query('id') id: string) {
+  async deleteAccount(@Query('id') id: string) {
     if (!id) {
       throw new BadRequestException(
         'リクストエラー：削除するIDが指定されていません',
       );
     }
-    return this.AccountsService.deleteAccount(id);
+    return await this.AccountsService.deleteAccount(id);
   }
 
   // アカウントを追加
@@ -61,7 +61,9 @@ export class AccountsController {
 
   // アカウントを編集
   @Put()
-  async updataAccount(@Body() updataAccount: UpdataAccountDto) {
+  async updataAccount(
+    @Body() updataAccount: UpdataAccountDto,
+  ): Promise<AccountModel> {
     return await this.AccountsService.updataAccount(updataAccount);
   }
 }
