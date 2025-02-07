@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthSigninDto, AuthSignupDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
@@ -31,6 +39,11 @@ export class AuthController {
 
   @Get()
   checkLogin(@Req() req: Request) {
+    if (!req.user) {
+      throw new UnauthorizedException(
+        'requestにユーザー情報が含まれていません',
+      );
+    }
     return this.authService.checkLogin(req);
   }
 }

@@ -52,7 +52,7 @@ export class AuthService {
       throw new UnauthorizedException('メールアドレスが違います。');
     }
 
-    const isMatch = await bcrypt.compare(password, findUser.password);
+    const isMatch: boolean = await bcrypt.compare(password, findUser.password);
     if (!isMatch) {
       throw new UnauthorizedException('パスワードが違います');
     }
