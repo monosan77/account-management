@@ -18,7 +18,7 @@ export class AccountsService {
 
   //特定のアカウントを取得する
   async findOneAccount(id: string): Promise<AccountModel> {
-    const accountData = await this.accountRepository.findOne({
+    const accountData: Account | null = await this.accountRepository.findOne({
       where: { id: id },
     });
     if (!accountData) {
@@ -30,11 +30,16 @@ export class AccountsService {
   }
 
   //アカウント情報を全て取得する
-  async findAll() {
+  async findAll(): Promise<AccountModel[]> {
     const accountData: AccountModel[] = await this.accountRepository.find();
+
+    if (accountData.length === 0) {
+      throw new NotFoundException('データを取得できませんでした。');
+    }
     return accountData;
   }
 
+  // アカウントを削除する
   async deleteAccount(id: string) {
     const result = await this.accountRepository.delete({
       id: id,
@@ -42,6 +47,7 @@ export class AccountsService {
     if (result.affected === 0) {
       throw new NotFoundException('削除できるデーターが存在しませんでした。');
     }
+    return { success: true };
   }
 
   // 新しいアカウントの作成
