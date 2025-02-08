@@ -44,14 +44,6 @@ export class AuthMiddleware implements NestMiddleware {
     if (now > expires_at) {
       throw new UnauthorizedException('セッションの有効期限が切れています');
     }
-    // ログインから６時間経過後に操作したらセッションを更新する
-    const UPDATA_HOURS = 6;
-    if (
-      now > new Date(expires_at.setDate(expires_at.getHours() - UPDATA_HOURS))
-    ) {
-      const newSession = await this.authService.updataSessionTable(sessionData);
-      this.authService.setCookie(res, newSession.session_id);
-    }
 
     // reqにユーザー情報をセット
     req.user = {
