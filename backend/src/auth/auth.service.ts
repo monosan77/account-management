@@ -117,4 +117,10 @@ export class AuthService {
     const user = req.user;
     return user;
   }
+
+  logout(res: Response) {
+    res.clearCookie('session_id');
+    console.log('service呼ばれあ');
+    return { message: 'ログアウトしました' };
+  }
 }
