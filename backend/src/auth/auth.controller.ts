@@ -46,4 +46,11 @@ export class AuthController {
     }
     return this.authService.checkLogin(req);
   }
+
+  @Post('logout')
+  logout(@Res() res: Response) {
+    const message = this.authService.logout(res);
+    console.log(message);
+    return res.json(message);
+  }
 }
