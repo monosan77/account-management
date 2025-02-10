@@ -3,34 +3,34 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 // アカウント削除APIへのリクエスト
-export async function actionsDeleteAccount(accountId: string) {
-  try {
-    const cookieStore = await cookies();
-    const cookieHeader = cookieStore
-      .getAll()
-      .map(({ name, value }) => `${name}=${value}`)
-      .join('; ');
-    const res = await fetch(`http://localhost:3001/account?id=${accountId}`, {
-      method: 'DELETE',
-      headers: {
-        Cookie: cookieHeader,
-      },
-      credentials: 'include',
-    });
-    if (res.status === 401) {
-      return { status: 401 };
-    }
-    if (!res.ok) {
-      throw new Error('削除できませんでした。');
-    }
-    revalidatePath('/');
+// export async function actionsDeleteAccount(accountId: string) {
+//   try {
+//     const cookieStore = await cookies();
+//     const cookieHeader = cookieStore
+//       .getAll()
+//       .map(({ name, value }) => `${name}=${value}`)
+//       .join('; ');
+//     const res = await fetch(`http://localhost:3001/account?id=${accountId}`, {
+//       method: 'DELETE',
+//       headers: {
+//         Cookie: cookieHeader,
+//       },
+//       credentials: 'include',
+//     });
+//     if (res.status === 401) {
+//       return { status: 401 };
+//     }
+//     if (!res.ok) {
+//       throw new Error('削除できませんでした。');
+//     }
+//     revalidatePath('/');
 
-    return { status: 200 };
-  } catch (error) {
-    console.log(error);
-    return { status: 401 };
-  }
-}
+//     return { status: 200 };
+//   } catch (error) {
+//     console.log(error);
+//     return { status: 401 };
+//   }
+// }
 
 // アカウント追加APIのリクエスト
 export async function actionsCreateAccount(

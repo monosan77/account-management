@@ -1,27 +1,28 @@
 'use client';
-import React from 'react';
 import AccountData from '../AccountData/AccountData';
-import { AccountDataModel } from '@/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import ConfirmModal from '@/components/Modal/ConfirmModal/ConfirmModal';
 import DataTitle from '../DataTitle/DataTitle';
 import NoGetData from '@/components/NoGetData/NoGetData';
-type Prop = {
-  accountAllData: AccountDataModel[] | null;
-};
-const AccountTable = ({ accountAllData }: Prop) => {
+import { useGetAllAccountQuery } from '@/lib/redux/Account/Account.service';
+
+const AccountTable = () => {
   // 削除モーダルの開閉
   const { isOpen } = useSelector((state: RootState) => state.modalOpen);
+  const { data, isLoading } = useGetAllAccountQuery();
+
   return (
     <>
-      {accountAllData ? (
+      {isLoading ? (
+        <p>loading...</p>
+      ) : data ? (
         <table className=" text-center ">
           <thead className="mb-2">
             <DataTitle />
           </thead>
           <tbody>
-            {accountAllData.map((account, index) => (
+            {data.map((account, index) => (
               <AccountData
                 key={account.id}
                 accountData={account}

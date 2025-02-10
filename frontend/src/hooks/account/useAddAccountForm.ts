@@ -1,4 +1,4 @@
-import { actionsCreateAccount } from '@/app/actions/accounts';
+import { useAddAccountMutation } from '@/lib/redux/Account/Account.service';
 import { Inputs } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -18,23 +18,28 @@ export default function useAddAccountForm() {
   });
   const router = useRouter();
   const [apiError, setApiError] = useState('');
+  const [addAccount] = useAddAccountMutation();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
     try {
-      const createResult: { status: number } = await actionsCreateAccount(
-        data.userName,
-        data.email,
-        data.tel
-      );
-      if (createResult.status === 409) {
+      const result = await addAccount({
+        name: data.userName,
+        email: data.email,
+        tel: data.tel,
+      });
+      const status = result.data?.status;
+      console.log(status);
+
+      if (status === 409) {
         return setApiError('既に登録済みのメールアドレスです。');
-      } else if (createResult.status === 401) {
+      } else if (status === 401) {
         return router.push('/session-error');
-      } else if (createResult.status === 500) {
+      } else if (status === 201) {
+        router.push('/');
+      } else {
         throw new Error('サーバーエラー');
       }
-      router.push('/');
     } catch (error) {
       console.log(error);
       setApiError('サーバーエラーのため、アカウントを追加できませんでした。');

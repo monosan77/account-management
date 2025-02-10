@@ -1,5 +1,5 @@
-import { actionsDeleteAccount } from '@/app/actions/accounts';
 import ButtonCustomSize from '@/components/Frame/ButtonCustomSize';
+import { useDeleteAccountMutation } from '@/lib/redux/Account/Account.service';
 import { setIsClose } from '@/lib/redux/modalOpen';
 import { RootState } from '@/lib/redux/store';
 import { useRouter } from 'next/navigation';
@@ -10,16 +10,17 @@ const ConfirmButtons = () => {
   const dispatch = useDispatch();
   const { accountId } = useSelector((state: RootState) => state.modalOpen);
 
-  async function deleteAccount() {
+  const [deleteAccount] = useDeleteAccountMutation();
+  async function handleDeleteAccount() {
     try {
-      const { status } = await actionsDeleteAccount(accountId);
+      const result = await deleteAccount(accountId);
+      const status = result.data?.status;
       if (status === 500) {
         throw new Error('削除できませんでした。');
       } else if (status === 401) {
         return router.push('/session-error');
       } else if (status === 200) {
         dispatch(setIsClose());
-        return router.push('/');
       } else {
         throw new Error('予期せぬエラーが発生しました。');
       }
@@ -35,7 +36,7 @@ const ConfirmButtons = () => {
         width="100px"
         bgColor={'red'}
         textColor={'white'}
-        handleClick={deleteAccount}
+        handleClick={handleDeleteAccount}
       />
       <ButtonCustomSize
         text="キャンセル"
