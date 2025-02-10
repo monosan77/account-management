@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import modalOpenReducer from './modalOpen';
+import allAccountReducer from './Account/allAccount';
+import { getAllAccountApi } from './Account/Account.service';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       modalOpen: modalOpenReducer,
+      allAccount: allAccountReducer,
+      [getAllAccountApi.reducerPath]: getAllAccountApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(getAllAccountApi.middleware),
   });
 };
 

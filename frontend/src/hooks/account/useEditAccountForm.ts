@@ -1,4 +1,4 @@
-import { actionsUpdataAccount } from '@/app/actions/accounts';
+import { useEditAccountMutation } from '@/lib/redux/Account/Account.service';
 import { AccountDataModel, Inputs } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -19,20 +19,22 @@ export default function useEditAccountForm(accountData: AccountDataModel) {
 
   const router = useRouter();
   const [apiError, setApiError] = useState('');
+  const [editAccount] = useEditAccountMutation();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
     try {
-      const isResult = await actionsUpdataAccount(
-        accountData.id,
-        data.userName,
-        data.email,
-        data.tel
-      );
-      if (isResult.status === 409) {
+      const result = await editAccount({
+        id: accountData.id,
+        name: data.userName,
+        email: data.email,
+        tel: data.tel,
+      });
+      const status = result.data?.status;
+      if (status === 409) {
         return setApiError('登録済みのメールアドレスです。');
-      } else if (isResult.status === 401) {
+      } else if (status === 401) {
         return router.push('/session-error');
-      } else if (isResult.status === 500) {
+      } else if (status === 500) {
         throw new Error('サーバーエラーが発生しました。');
       }
       return router.push('/');
