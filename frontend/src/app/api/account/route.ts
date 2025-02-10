@@ -2,6 +2,9 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+// ****************
+// 全てのアカウントを取得
+// ****************
 export async function GET() {
   try {
     const cookieStore = await cookies();
@@ -27,7 +30,9 @@ export async function GET() {
     return NextResponse.json({ message: 'ok' });
   }
 }
-
+// ****************
+// アカウントを削除
+// ****************
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const accountId = searchParams.get('id');
@@ -60,7 +65,9 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ status: 500 });
   }
 }
-
+// ****************
+// アカウントを追加
+// ****************
 export async function POST(req: NextRequest) {
   try {
     const { name, email, tel } = await req.json();
@@ -95,7 +102,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: 500 });
   }
 }
-
+// ****************
+// アカウントの更新
+// ****************
 export async function PUT(req: NextRequest) {
   const { id, name, email, tel } = await req.json();
 
