@@ -95,3 +95,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: 500 });
   }
 }
+
+export async function PUT(req: NextRequest) {
+  const { id, name, email, tel } = await req.json();
+
+  try {
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join('; ');
+    const res = await fetch('http://localhost:3001/account', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookieHeader,
+      },
+      credentials: 'include',
+      body: JSON.stringify({ id, name, email, tel }),
+    });
+    // 同じメールアドレス存在する場合
+    if (res.status === 409) {
+      return NextResponse.json({ status: 409 });
+    } else if (res.status === 401) {
+      return NextResponse.json({ status: 401 });
+    }
+    if (!res.ok) {
+      throw new Error('サーバーエラーが発生しました。');
+    }
+    revalidatePath('/');
+    revalidatePath('/edit');
+    return NextResponse.json({ status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ status: 500 });
+  }
+}
