@@ -23,7 +23,6 @@ export default function useAddAccountForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
-    console.log(data.image);
     const formData = new FormData();
     formData.append('image', data.image[0]);
     formData.append('name', data.userName);

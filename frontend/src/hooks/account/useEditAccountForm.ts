@@ -14,6 +14,7 @@ export default function useEditAccountForm(accountData: AccountDataModel) {
       userName: accountData.name,
       email: accountData.email,
       tel: accountData.tel,
+      image: [],
     },
   });
 
@@ -22,13 +23,14 @@ export default function useEditAccountForm(accountData: AccountDataModel) {
   const [editAccount] = useEditAccountMutation();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
+    const formData = new FormData();
+    formData.append('id', accountData.id);
+    formData.append('image', data.image[0]);
+    formData.append('name', data.userName);
+    formData.append('email', data.email);
+    formData.append('tel', data.tel);
     try {
-      const result = await editAccount({
-        id: accountData.id,
-        name: data.userName,
-        email: data.email,
-        tel: data.tel,
-      });
+      const result = await editAccount(formData);
       const status = result.data?.status;
       if (status === 409) {
         return setApiError('登録済みのメールアドレスです。');

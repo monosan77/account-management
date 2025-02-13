@@ -7,12 +7,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 //   tel: string;
 //   image: File;
 // };
-type PutAccount = {
-  id: string;
-  name: string;
-  email: string;
-  tel: string;
-};
+// type PutAccount = {
+//   id: string;
+//   name: string;
+//   email: string;
+//   tel: string;
+// };
 export const getAllAccountApi = createApi({
   reducerPath: 'allAccountApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
@@ -24,9 +24,9 @@ export const getAllAccountApi = createApi({
     getAllAccount: builder.query<AccountDataModel[], void>({
       query: () => 'account',
       providesTags: (result) =>
-        result
+        result && Array.isArray(result)
           ? [
-              ...(result || []).map(({ id }) => ({
+              ...result.map(({ id }) => ({
                 type: 'Account' as const,
                 id,
               })),
@@ -77,11 +77,11 @@ export const getAllAccountApi = createApi({
     // ****************
     // アカウントを編集
     // ****************
-    editAccount: builder.mutation<{ status: number }, PutAccount>({
-      query: (body) => ({
+    editAccount: builder.mutation<{ status: number }, FormData>({
+      query: (formData) => ({
         url: 'account',
         method: 'PUT',
-        body,
+        body: formData,
       }),
       invalidatesTags: ['Account'],
     }),

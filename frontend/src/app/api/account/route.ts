@@ -72,7 +72,6 @@ export async function DELETE(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    // const { name, email, tel, image } = await req.json();
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
       .getAll()
@@ -84,13 +83,6 @@ export async function POST(req: NextRequest) {
       headers: { Cookie: cookieHeader },
       credentials: 'include',
       body: formData,
-      // body: JSON.stringify({
-      //   // name: name,
-      //   // email: email,
-      //   // tel: tel,
-      //   // image: image,
-      //   formData,
-      // }),
     });
     // 同じメールアドレス存在する場合
     if (res.status === 409) {
@@ -113,8 +105,10 @@ export async function POST(req: NextRequest) {
 // アカウントの更新
 // ****************
 export async function PUT(req: NextRequest) {
-  const { id, name, email, tel } = await req.json();
+  const formData = await req.formData();
 
+  // const { id, name, email, tel } = await req.json();
+  console.log(formData);
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
@@ -124,11 +118,10 @@ export async function PUT(req: NextRequest) {
     const res = await fetch('http://localhost:3001/account', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         Cookie: cookieHeader,
       },
       credentials: 'include',
-      body: JSON.stringify({ id, name, email, tel }),
+      body: formData,
     });
     // 同じメールアドレス存在する場合
     if (res.status === 409) {
@@ -137,6 +130,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ status: 401 });
     }
     if (!res.ok) {
+      console.log(res);
       throw new Error('サーバーエラーが発生しました。');
     }
     revalidatePath('/');
