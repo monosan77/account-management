@@ -7,7 +7,7 @@ import useAddAccountForm from '@/hooks/account/useAddAccountForm';
 import AccountImage from '../AccountForm/AccountImage';
 
 const AddAccountForm = () => {
-  const { register, handleSubmit, errors, apiError, onSubmit } =
+  const { register, handleSubmit, errors, apiError, onSubmit, isLoading } =
     useAddAccountForm();
 
   return (
@@ -17,7 +17,9 @@ const AddAccountForm = () => {
       <TelNumber register={register} errors={errors.tel?.message} />
       <AccountImage register={register} errors={errors.image?.message} />
 
-      <p className="h-6 text-center text-red-600 text-xs">{apiError}</p>
+      <p className="h-6 text-center text-red-600 text-xs">
+        {isLoading ? '...loading' : apiError}
+      </p>
       <Buttons />
     </form>
   );

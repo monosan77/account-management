@@ -8,15 +8,19 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto, UpdataAccountDto } from './dto/create-account.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 export type AccountModel = {
   id: string;
   name: string;
   email: string;
   tel: string;
+  image: string;
 };
 
 @Controller('account')
@@ -53,10 +57,19 @@ export class AccountsController {
   // アカウントを追加
   @Post()
   @HttpCode(201)
+  @UseInterceptors(FileInterceptor('image'))
+  // createAccount(
   async createAccount(
+    @UploadedFile() image: Express.Multer.File,
     @Body() createAccount: CreateAccountDto,
-  ): Promise<AccountModel> {
-    return await this.AccountsService.createAccount(createAccount);
+  ) {
+    // ): Promise<AccountModel> {
+    // console.log(image, 'image');
+    // console.log(createAccount);
+    if (!image) {
+      throw new Error('Image file is required');
+    }
+    return await this.AccountsService.createAccount(createAccount, image);
   }
 
   // アカウントを編集

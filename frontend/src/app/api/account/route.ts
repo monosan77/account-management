@@ -1,3 +1,4 @@
+import { AccountDataModel } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -22,7 +23,7 @@ export async function GET() {
     if (!res.ok) {
       throw new Error('データを取得できませんでした。');
     }
-    const accountAllData = await res.json();
+    const accountAllData: AccountDataModel[] = await res.json();
 
     return NextResponse.json(accountAllData);
   } catch (error) {
@@ -70,21 +71,26 @@ export async function DELETE(req: NextRequest) {
 // ****************
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, tel } = await req.json();
+    const formData = await req.formData();
+    // const { name, email, tel, image } = await req.json();
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
       .getAll()
       .map(({ name, value }) => `${name}=${value}`)
       .join('; ');
+
     const res = await fetch('http://localhost:3001/account', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+      headers: { Cookie: cookieHeader },
       credentials: 'include',
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        tel: tel,
-      }),
+      body: formData,
+      // body: JSON.stringify({
+      //   // name: name,
+      //   // email: email,
+      //   // tel: tel,
+      //   // image: image,
+      //   formData,
+      // }),
     });
     // 同じメールアドレス存在する場合
     if (res.status === 409) {
@@ -93,6 +99,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: 401 });
     }
     if (!res.ok) {
+      console.log(res);
       throw new Error('サーバーエラー');
     }
     revalidatePath('/');

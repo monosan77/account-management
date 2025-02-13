@@ -1,11 +1,12 @@
 import { AccountDataModel } from '@/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-type PostAccount = {
-  name: string;
-  email: string;
-  tel: string;
-};
+// type PostAccount = {
+//   name: string;
+//   email: string;
+//   tel: string;
+//   image: File;
+// };
 type PutAccount = {
   id: string;
   name: string;
@@ -64,11 +65,12 @@ export const getAllAccountApi = createApi({
     // *****************
     // アカウントを追加
     // *****************
-    addAccount: builder.mutation<{ status: number }, PostAccount>({
-      query: (body) => ({
+    addAccount: builder.mutation<{ status: number }, FormData>({
+      // addAccount: builder.mutation<{ status: number }, PostAccount>({
+      query: (formData) => ({
         url: 'account',
         method: 'POST',
-        body,
+        body: formData,
       }),
       invalidatesTags: ['Account'],
     }),

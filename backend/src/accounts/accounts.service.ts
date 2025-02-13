@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from 'src/entities/account.entity';
 import { Repository } from 'typeorm';
 import { AccountModel } from './accounts.controller';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 
 @Injectable()
 export class AccountsService {
@@ -51,17 +52,45 @@ export class AccountsService {
   }
 
   // 新しいアカウントの作成
-  async createAccount(createAccount: CreateAccountDto): Promise<AccountModel> {
-    const account = new Account();
-    account.name = createAccount.name;
-    account.email = createAccount.email;
-    account.tel = createAccount.tel;
+  async createAccount(
+    createAccount: CreateAccountDto,
+    image: Express.Multer.File,
+  ): Promise<AccountModel> {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+    console.log(image);
     const findAccount = await this.accountRepository.find({
-      where: { email: account.email },
+      where: { email: createAccount.email },
     });
     if (findAccount.length > 0) {
       throw new ConflictException('既に存在するメールアドレスです');
     }
+    // ファイルを同期的に読み込む
+    const postImageResult = await new Promise<UploadApiResponse>(
+      (resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream((error, result) => {
+            if (error) {
+              reject(new Error(error.message));
+            } else {
+              resolve(result as UploadApiResponse);
+            }
+          })
+          // bufferにエラーが出ちゃう理由分からない
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          .end(image.buffer);
+      },
+    );
+    console.log(postImageResult.secure_url, 'idaoufdapoiup');
+    const account = new Account();
+    account.name = createAccount.name;
+    account.email = createAccount.email;
+    account.tel = createAccount.tel;
+    account.image = postImageResult.secure_url;
+
     const newAccount: AccountModel = await this.accountRepository.save(account);
     return newAccount;
   }
