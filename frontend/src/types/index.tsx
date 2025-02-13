@@ -3,6 +3,7 @@ export type Inputs = {
   userName: string;
   email: string;
   tel: string;
+  image: string;
 };
 
 // APIから返却されるアカウントのデータ型

@@ -14,6 +14,7 @@ export default function useAddAccountForm() {
       userName: '',
       email: '',
       tel: '',
+      image: '',
     },
   });
   const router = useRouter();
@@ -22,28 +23,29 @@ export default function useAddAccountForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
-    try {
-      const result = await addAccount({
-        name: data.userName,
-        email: data.email,
-        tel: data.tel,
-      });
-      const status = result.data?.status;
-      console.log(status);
+    console.log(data);
+    // try {
+    //   const result = await addAccount({
+    //     name: data.userName,
+    //     email: data.email,
+    //     tel: data.tel,
+    //   });
+    //   const status = result.data?.status;
+    //   console.log(status);
 
-      if (status === 409) {
-        return setApiError('既に登録済みのメールアドレスです。');
-      } else if (status === 401) {
-        return router.push('/session-error');
-      } else if (status === 201) {
-        router.push('/');
-      } else {
-        throw new Error('サーバーエラー');
-      }
-    } catch (error) {
-      console.log(error);
-      setApiError('サーバーエラーのため、アカウントを追加できませんでした。');
-    }
+    //   if (status === 409) {
+    //     return setApiError('既に登録済みのメールアドレスです。');
+    //   } else if (status === 401) {
+    //     return router.push('/session-error');
+    //   } else if (status === 201) {
+    //     router.push('/');
+    //   } else {
+    //     throw new Error('サーバーエラー');
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   setApiError('サーバーエラーのため、アカウントを追加できませんでした。');
+    // }
   };
 
   return { register, handleSubmit, errors, apiError, onSubmit };
