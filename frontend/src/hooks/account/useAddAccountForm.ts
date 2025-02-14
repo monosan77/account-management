@@ -14,22 +14,23 @@ export default function useAddAccountForm() {
       userName: '',
       email: '',
       tel: '',
+      image: [],
     },
   });
   const router = useRouter();
   const [apiError, setApiError] = useState('');
-  const [addAccount] = useAddAccountMutation();
+  const [addAccount, { isLoading }] = useAddAccountMutation();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
+    const formData = new FormData();
+    formData.append('image', data.image[0]);
+    formData.append('name', data.userName);
+    formData.append('email', data.email);
+    formData.append('tel', data.tel);
     try {
-      const result = await addAccount({
-        name: data.userName,
-        email: data.email,
-        tel: data.tel,
-      });
-      const status = result.data?.status;
-      console.log(status);
+      const { data } = await addAccount(formData);
+      const status = data?.status;
 
       if (status === 409) {
         return setApiError('既に登録済みのメールアドレスです。');
@@ -46,5 +47,5 @@ export default function useAddAccountForm() {
     }
   };
 
-  return { register, handleSubmit, errors, apiError, onSubmit };
+  return { register, handleSubmit, errors, apiError, onSubmit, isLoading };
 }

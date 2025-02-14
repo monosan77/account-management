@@ -16,7 +16,7 @@ const AccountTable = () => {
     <>
       {isLoading ? (
         <p>loading...</p>
-      ) : data ? (
+      ) : Array.isArray(data) ? (
         <table className=" text-center ">
           <thead className="mb-2">
             <DataTitle />

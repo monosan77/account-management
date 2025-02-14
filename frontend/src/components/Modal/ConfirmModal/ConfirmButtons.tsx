@@ -8,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 const ConfirmButtons = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { accountId } = useSelector((state: RootState) => state.modalOpen);
+  const { accountId, imageId } = useSelector(
+    (state: RootState) => state.modalOpen
+  );
 
-  const [deleteAccount] = useDeleteAccountMutation();
+  const [deleteAccount, { isLoading }] = useDeleteAccountMutation();
   async function handleDeleteAccount() {
     try {
-      const result = await deleteAccount(accountId);
+      const result = await deleteAccount({ accountId, imageId });
       const status = result.data?.status;
       if (status === 500) {
         throw new Error('削除できませんでした。');
@@ -29,24 +31,29 @@ const ConfirmButtons = () => {
     }
   }
   return (
-    <div className="w-full mt-5 flex justify-around ">
-      <ButtonCustomSize
-        text="削除する"
-        type="submit"
-        width="100px"
-        bgColor={'red'}
-        textColor={'white'}
-        handleClick={handleDeleteAccount}
-      />
-      <ButtonCustomSize
-        text="キャンセル"
-        type="button"
-        width="100px"
-        bgColor={'white'}
-        textColor={'#00B3FF'}
-        handleClick={() => dispatch(setIsClose())}
-      />
-    </div>
+    <>
+      <p className="h-4 mt-2 text-center text-red-600">
+        {isLoading && '...loading'}
+      </p>
+      <div className="w-full mt-5 flex justify-around ">
+        <ButtonCustomSize
+          text="削除する"
+          type="submit"
+          width="100px"
+          bgColor={'red'}
+          textColor={'white'}
+          handleClick={handleDeleteAccount}
+        />
+        <ButtonCustomSize
+          text="キャンセル"
+          type="button"
+          width="100px"
+          bgColor={'white'}
+          textColor={'#00B3FF'}
+          handleClick={() => dispatch(setIsClose())}
+        />
+      </div>
+    </>
   );
 };
 

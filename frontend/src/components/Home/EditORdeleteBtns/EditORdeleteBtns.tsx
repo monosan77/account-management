@@ -7,9 +7,10 @@ import { useDispatch } from 'react-redux';
 type Prop = {
   accountId: string;
   accountName: string;
+  accountImageId: string;
 };
 
-const EditORdeleteBtns = ({ accountId, accountName }: Prop) => {
+const EditORdeleteBtns = ({ accountId, accountName, accountImageId }: Prop) => {
   const dispatch = useDispatch();
   return (
     <>
@@ -21,7 +22,11 @@ const EditORdeleteBtns = ({ accountId, accountName }: Prop) => {
       </Link>
       <button
         type="button"
-        onClick={() => dispatch(setIsOpen({ accountName, accountId }))}
+        onClick={() =>
+          dispatch(
+            setIsOpen({ accountName, accountId, imageId: accountImageId })
+          )
+        }
         className="btn-style bg-[#ED828D] hover:opacity-85"
       >
         削除

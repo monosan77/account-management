@@ -1,3 +1,4 @@
+import { AccountDataModel } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -13,7 +14,6 @@ export async function GET() {
       .map(({ name, value }) => `${name}=${value}`)
       .join('; ');
     const res = await fetch('http://localhost:3001/account/allAccount', {
-      // next: { revalidate: 3600 },
       headers: {
         Cookie: cookieHeader,
       },
@@ -22,7 +22,7 @@ export async function GET() {
     if (!res.ok) {
       throw new Error('データを取得できませんでした。');
     }
-    const accountAllData = await res.json();
+    const accountAllData: AccountDataModel[] = await res.json();
 
     return NextResponse.json(accountAllData);
   } catch (error) {
@@ -36,21 +36,23 @@ export async function GET() {
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const accountId = searchParams.get('id');
+  const imageId = searchParams.get('imageId');
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
       .getAll()
       .map(({ name, value }) => `${name}=${value}`)
       .join('; ');
-    const res = await fetch(`http://localhost:3001/account?id=${accountId}`, {
-      method: 'DELETE',
-      headers: {
-        Cookie: cookieHeader,
-      },
-      credentials: 'include',
-    });
-    console.log(res);
-    console.log(accountId);
+    const res = await fetch(
+      `http://localhost:3001/account?id=${accountId}&imageId=${imageId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Cookie: cookieHeader,
+        },
+        credentials: 'include',
+      }
+    );
     if (res.status === 401) {
       return NextResponse.json({ status: 401 });
     }
@@ -70,21 +72,18 @@ export async function DELETE(req: NextRequest) {
 // ****************
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, tel } = await req.json();
+    const formData = await req.formData();
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
       .getAll()
       .map(({ name, value }) => `${name}=${value}`)
       .join('; ');
+
     const res = await fetch('http://localhost:3001/account', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+      headers: { Cookie: cookieHeader },
       credentials: 'include',
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        tel: tel,
-      }),
+      body: formData,
     });
     // 同じメールアドレス存在する場合
     if (res.status === 409) {
@@ -93,6 +92,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: 401 });
     }
     if (!res.ok) {
+      console.log(res);
       throw new Error('サーバーエラー');
     }
     revalidatePath('/');
@@ -106,8 +106,7 @@ export async function POST(req: NextRequest) {
 // アカウントの更新
 // ****************
 export async function PUT(req: NextRequest) {
-  const { id, name, email, tel } = await req.json();
-
+  const formData = await req.formData();
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
@@ -117,11 +116,10 @@ export async function PUT(req: NextRequest) {
     const res = await fetch('http://localhost:3001/account', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         Cookie: cookieHeader,
       },
       credentials: 'include',
-      body: JSON.stringify({ id, name, email, tel }),
+      body: formData,
     });
     // 同じメールアドレス存在する場合
     if (res.status === 409) {
@@ -130,6 +128,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ status: 401 });
     }
     if (!res.ok) {
+      console.log(res);
       throw new Error('サーバーエラーが発生しました。');
     }
     revalidatePath('/');

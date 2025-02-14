@@ -38,4 +38,7 @@ export class UpdataAccountDto {
   @IsString()
   @Length(10, 11)
   tel: string;
+
+  @IsString()
+  imageId: string;
 }

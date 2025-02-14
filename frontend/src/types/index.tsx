@@ -3,6 +3,7 @@ export type Inputs = {
   userName: string;
   email: string;
   tel: string;
+  image: FileList | File[];
 };
 
 // APIから返却されるアカウントのデータ型
@@ -11,6 +12,8 @@ export type AccountDataModel = {
   name: string;
   email: string;
   tel: string;
+  image: string;
+  imageId: string;
 };
 
 // ログインユーザーのデータ型

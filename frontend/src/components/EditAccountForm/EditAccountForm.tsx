@@ -5,13 +5,14 @@ import Email from '../AccountForm/Email';
 import TelNumber from '../AccountForm/TelNumber';
 import Buttons from '../AccountForm/AccountFormBtns';
 import useEditAccount from '@/hooks/account/useEditAccountForm';
+import AccountImage from '../AccountForm/AccountImage';
 
 type Prop = {
   accountData: AccountDataModel;
 };
 
 const EditAccountForm = ({ accountData }: Prop) => {
-  const { register, handleSubmit, errors, apiError, onSubmit } =
+  const { register, handleSubmit, errors, apiError, onSubmit, isLoading } =
     useEditAccount(accountData);
 
   return (
@@ -19,7 +20,10 @@ const EditAccountForm = ({ accountData }: Prop) => {
       <UserName register={register} errors={errors.userName?.message} />
       <Email register={register} errors={errors.email?.message} />
       <TelNumber register={register} errors={errors.tel?.message} />
-      <p className="h-6 text-center text-red-600 text-xs">{apiError}</p>
+      <AccountImage register={register} errors={errors.image?.message} />
+      <p className="h-6 text-center text-red-600 text-xs">
+        {isLoading ? '...loading' : apiError}
+      </p>
       <Buttons />
     </form>
   );
