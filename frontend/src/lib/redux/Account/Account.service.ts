@@ -1,18 +1,6 @@
 import { AccountDataModel } from '@/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// type PostAccount = {
-//   name: string;
-//   email: string;
-//   tel: string;
-//   image: File;
-// };
-// type PutAccount = {
-//   id: string;
-//   name: string;
-//   email: string;
-//   tel: string;
-// };
 export const getAllAccountApi = createApi({
   reducerPath: 'allAccountApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
@@ -37,10 +25,13 @@ export const getAllAccountApi = createApi({
     //***************** */
     // アカウント削除
     //***************** */
-    deleteAccount: builder.mutation<{ status: number }, string>({
-      query(id) {
+    deleteAccount: builder.mutation<
+      { status: number },
+      { accountId: string; imageId: string }
+    >({
+      query(query) {
         return {
-          url: `account?id=${id}`,
+          url: `account?id=${query.accountId}&imageId=${query.imageId}`,
           method: 'DELETE',
         };
       },
@@ -50,7 +41,7 @@ export const getAllAccountApi = createApi({
             'getAllAccount',
             undefined,
             (draft) => {
-              return draft.filter((account) => account.id !== id);
+              return draft.filter((account) => account.id !== id.accountId);
             }
           )
         );
@@ -66,7 +57,6 @@ export const getAllAccountApi = createApi({
     // アカウントを追加
     // *****************
     addAccount: builder.mutation<{ status: number }, FormData>({
-      // addAccount: builder.mutation<{ status: number }, PostAccount>({
       query: (formData) => ({
         url: 'account',
         method: 'POST',

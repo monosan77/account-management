@@ -16,6 +16,7 @@ const AccountData = ({ accountData, indexNo }: Prop) => {
         <EditORdeleteBtns
           accountId={accountData.id}
           accountName={accountData.name}
+          accountImageId={accountData.imageId}
         />
       </td>
     </tr>

@@ -14,7 +14,6 @@ export async function GET() {
       .map(({ name, value }) => `${name}=${value}`)
       .join('; ');
     const res = await fetch('http://localhost:3001/account/allAccount', {
-      // next: { revalidate: 3600 },
       headers: {
         Cookie: cookieHeader,
       },
@@ -37,21 +36,23 @@ export async function GET() {
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const accountId = searchParams.get('id');
+  const imageId = searchParams.get('imageId');
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
       .getAll()
       .map(({ name, value }) => `${name}=${value}`)
       .join('; ');
-    const res = await fetch(`http://localhost:3001/account?id=${accountId}`, {
-      method: 'DELETE',
-      headers: {
-        Cookie: cookieHeader,
-      },
-      credentials: 'include',
-    });
-    console.log(res);
-    console.log(accountId);
+    const res = await fetch(
+      `http://localhost:3001/account?id=${accountId}&imageId=${imageId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Cookie: cookieHeader,
+        },
+        credentials: 'include',
+      }
+    );
     if (res.status === 401) {
       return NextResponse.json({ status: 401 });
     }
@@ -106,9 +107,6 @@ export async function POST(req: NextRequest) {
 // ****************
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
-
-  // const { id, name, email, tel } = await req.json();
-  console.log(formData);
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
