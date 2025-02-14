@@ -15,5 +15,8 @@ export class Account {
   tel: string;
 
   @Column()
+  imageId: string;
+
+  @Column()
   image: string;
 }
