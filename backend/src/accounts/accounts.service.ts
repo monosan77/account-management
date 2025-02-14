@@ -44,12 +44,19 @@ export class AccountsService {
   // ****************
   // アカウントを削除する
   // ****************
-  async deleteAccount(id: string) {
+  async deleteAccount(id: string, imageId: string) {
     const result = await this.accountRepository.delete({
       id: id,
     });
     if (result.affected === 0) {
       throw new NotFoundException('削除できるデーターが存在しませんでした。');
+    }
+    // 画像の削除
+    const deleteResult: UploadApiResponse = (await cloudinary.uploader.destroy(
+      imageId,
+    )) as UploadApiResponse;
+    if (deleteResult.result !== 'ok') {
+      throw new Error('画像の削除に失敗しました');
     }
     return { success: true };
   }
@@ -60,12 +67,6 @@ export class AccountsService {
     createAccount: CreateAccountDto,
     image: Express.Multer.File,
   ): Promise<AccountModel> {
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
-    });
-    console.log(image);
     const findAccount = await this.accountRepository.find({
       where: { email: createAccount.email },
     });
@@ -110,13 +111,14 @@ export class AccountsService {
       throw new ConflictException('既に存在するメールアドレスです');
     }
 
+    // 画像の削除
     const deleteResult: UploadApiResponse = (await cloudinary.uploader.destroy(
       updataAccount.imageId,
     )) as UploadApiResponse;
     if (deleteResult.result !== 'ok') {
       throw new Error('画像の削除に失敗しました');
     }
-
+    // 画像の追加
     const postImageResult = await new Promise<UploadApiResponse>(
       (resolve, reject) => {
         cloudinary.uploader

@@ -49,13 +49,16 @@ export class AccountsController {
   // ****************
   @Delete()
   @HttpCode(204)
-  async deleteAccount(@Query('id') id: string) {
-    if (!id) {
+  async deleteAccount(
+    @Query('id') id: string,
+    @Query('imageId') imageId: string,
+  ) {
+    if (!id || !imageId) {
       throw new BadRequestException(
         'リクストエラー：削除するIDが指定されていません',
       );
     }
-    return await this.AccountsService.deleteAccount(id);
+    return await this.AccountsService.deleteAccount(id, imageId);
   }
   // ****************
   // アカウントを追加
@@ -82,8 +85,6 @@ export class AccountsController {
     @UploadedFile() image: Express.Multer.File,
     @Body() updataAccount: UpdataAccountDto,
   ): Promise<AccountModel> {
-    console.log(image);
-    console.log(updataAccount);
     return await this.AccountsService.updataAccount(updataAccount, image);
   }
 }
