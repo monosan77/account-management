@@ -79,7 +79,7 @@ export const getAllAccountApi = createApi({
     // ****************
     editAccount: builder.mutation<{ status: number }, FormData>({
       query: (formData) => ({
-        url: 'account',
+        url: `account`,
         method: 'PUT',
         body: formData,
       }),

@@ -13,6 +13,7 @@ export type AccountDataModel = {
   email: string;
   tel: string;
   image: string;
+  imageId: string;
 };
 
 // ログインユーザーのデータ型

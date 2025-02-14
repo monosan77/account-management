@@ -20,7 +20,7 @@ export default function useEditAccountForm(accountData: AccountDataModel) {
 
   const router = useRouter();
   const [apiError, setApiError] = useState('');
-  const [editAccount] = useEditAccountMutation();
+  const [editAccount, { isLoading }] = useEditAccountMutation();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setApiError('');
     const formData = new FormData();
@@ -29,6 +29,7 @@ export default function useEditAccountForm(accountData: AccountDataModel) {
     formData.append('name', data.userName);
     formData.append('email', data.email);
     formData.append('tel', data.tel);
+    formData.append('imageId', accountData.imageId);
     try {
       const result = await editAccount(formData);
       const status = result.data?.status;
@@ -46,5 +47,5 @@ export default function useEditAccountForm(accountData: AccountDataModel) {
     }
   };
 
-  return { register, handleSubmit, errors, apiError, onSubmit };
+  return { register, handleSubmit, errors, apiError, onSubmit, isLoading };
 }
