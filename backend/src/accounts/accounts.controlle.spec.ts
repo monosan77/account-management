@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Account } from 'src/entities/account.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BadRequestException } from '@nestjs/common';
+import { Readable } from 'stream';
 
 describe('AccountsController', () => {
   let accountsController: AccountsController;
@@ -26,27 +27,39 @@ describe('AccountsController', () => {
     accountsController = moduleRef.get<AccountsController>(AccountsController);
   });
 
+  const image: Express.Multer.File = {
+    buffer: Buffer.from('test image buffer'),
+    fieldname: '',
+    originalname: '',
+    encoding: '',
+    mimetype: '',
+    size: 0,
+    stream: Readable.from(Buffer.from('test image buffer')),
+    destination: '',
+    filename: '',
+    path: '',
+  };
+
+  const accountDB = {
+    id: '1',
+    name: 'test',
+    email: 'example@test.com',
+    tel: '000-0000-0000',
+    image: 'testImage',
+    imageId: 'testImageId',
+  };
+
   describe('findOneAccount', () => {
     test('アカウントが見つかった場合アカウントを返す', async () => {
-      const account = {
-        id: '1',
-        name: 'test',
-        email: 'example@test.com',
-      };
       jest
         .spyOn(accountsService, 'findOneAccount')
-        .mockResolvedValue(account as AccountModel);
-      expect(await accountsController.findOneAccount('1')).toBe(account);
+        .mockResolvedValue(accountDB as AccountModel);
+      expect(await accountsController.findOneAccount('1')).toBe(accountDB);
     });
     test('クエリパラメーターを受け取らなかったらエラーをスローする', async () => {
-      const account = {
-        id: '1',
-        name: 'test',
-        email: 'example@test.com',
-      };
       jest
         .spyOn(accountsService, 'findOneAccount')
-        .mockResolvedValue(account as AccountModel);
+        .mockResolvedValue(accountDB as AccountModel);
       await expect(accountsController.findOneAccount('')).rejects.toThrow(
         BadRequestException,
       );
@@ -59,6 +72,8 @@ describe('AccountsController', () => {
         name: 'test',
         email: 'example@test.com',
         tel: '000-0000-0000',
+        image: 'testImage',
+        imageId: 'testImageId',
       },
     ];
     test('全てのアカウントを返す', async () => {
@@ -71,46 +86,43 @@ describe('AccountsController', () => {
       jest
         .spyOn(accountsService, 'deleteAccount')
         .mockResolvedValue({ success: true });
-      await expect(accountsController.deleteAccount('1')).resolves.toEqual({
+      await expect(
+        accountsController.deleteAccount('1', 'imageId'),
+      ).resolves.toEqual({
         success: true,
       });
     });
     test('クエリパラメーターを受け取らなかったらエラーをスローする', async () => {
       jest.spyOn(accountsService, 'deleteAccount').mockRejectedValue(null);
-      await expect(accountsController.deleteAccount('')).rejects.toThrow(
+      await expect(accountsController.deleteAccount('', '')).rejects.toThrow(
         BadRequestException,
       );
     });
   });
   describe('createAccount', () => {
     test('アカウントが作成された場合201を返す', async () => {
-      const account = {
-        name: 'test',
-        email: 'example@test.com',
-        tel: '000-0000-0000',
-      };
       const newAccount = {
         id: '1',
         name: 'test',
         email: 'example@test.com',
         tel: '000-0000-0000',
+        image: 'testImage',
+        imageId: 'testImageId',
       };
       jest
         .spyOn(accountsService, 'createAccount')
         .mockResolvedValue(newAccount);
-      expect(await accountsController.createAccount(account)).toBe(newAccount);
+      expect(await accountsController.createAccount(image, accountDB)).toBe(
+        newAccount,
+      );
     });
   });
   describe('updataAccount', () => {
     test('アカウントが更新された場合200を返す', async () => {
-      const account = {
-        id: '1',
-        name: 'test',
-        email: 'example@test.com',
-        tel: '000-0000-0000',
-      };
-      jest.spyOn(accountsService, 'updataAccount').mockResolvedValue(account);
-      expect(await accountsController.updataAccount(account)).toBe(account);
+      jest.spyOn(accountsService, 'updataAccount').mockResolvedValue(accountDB);
+      expect(await accountsController.updataAccount(image, accountDB)).toBe(
+        accountDB,
+      );
     });
   });
 });
