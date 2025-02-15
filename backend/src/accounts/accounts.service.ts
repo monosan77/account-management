@@ -77,13 +77,23 @@ export class AccountsService {
     const postImageResult = await new Promise<UploadApiResponse>(
       (resolve, reject) => {
         cloudinary.uploader
-          .upload_stream((error, result) => {
-            if (error) {
-              reject(new Error(error.message));
-            } else {
-              resolve(result as UploadApiResponse);
-            }
-          })
+          .upload_stream(
+            {
+              transformation: {
+                width: 400,
+                height: 400,
+                crop: 'fill',
+                format: 'webp',
+              },
+            },
+            (error, result) => {
+              if (error) {
+                reject(new Error(error.message));
+              } else {
+                resolve(result as UploadApiResponse);
+              }
+            },
+          )
           .end(image.buffer);
       },
     );
@@ -122,13 +132,23 @@ export class AccountsService {
     const postImageResult = await new Promise<UploadApiResponse>(
       (resolve, reject) => {
         cloudinary.uploader
-          .upload_stream((error, result) => {
-            if (error) {
-              reject(new Error(error.message));
-            } else {
-              resolve(result as UploadApiResponse);
-            }
-          })
+          .upload_stream(
+            {
+              transformation: {
+                width: 400,
+                height: 400,
+                crop: 'fill',
+                format: 'webp',
+              },
+            },
+            (error, result) => {
+              if (error) {
+                reject(new Error(error.message));
+              } else {
+                resolve(result as UploadApiResponse);
+              }
+            },
+          )
           .end(image.buffer);
       },
     );
