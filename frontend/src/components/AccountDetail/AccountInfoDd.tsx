@@ -3,7 +3,7 @@ interface Prop {
   textData: string;
 }
 const AccountInfoDd = ({ textData }: Prop) => {
-  return <dd className="mb-10">・{textData}</dd>;
+  return <dd className="mb-1 text-xs sm:text-lg">・{textData}</dd>;
 };
 
 export default AccountInfoDd;
