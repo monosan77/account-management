@@ -9,7 +9,7 @@ type Prop = {
 
 const Frame = ({ children, title, width, isAddAccount }: Prop) => {
   return (
-    <div className="w-screen h-screen flex items-center justify-center ">
+    <div className="w-screen h-screen px-3 flex items-center justify-center ">
       <div style={{ maxWidth: width }} className="w-full">
         <h1 className="mb-3 text-center text-mainColor text-2xl font-bold shadow-sm">
           アカウント管理システム
